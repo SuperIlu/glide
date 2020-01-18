@@ -28,7 +28,7 @@ CPU ?= pentium
 
 UNLINK = rm -f $(1)
 
-CC = gcc
+CC = i586-pc-msdosdjgpp-gcc
 CFLAGS = -Wall -O2 -ffast-math -mtune=$(CPU)
 CFLAGS += -I$(TOP)/$(FX_GLIDE_HW)/glide3/src -I$(TOP)/$(FX_GLIDE_HW)/incsrc
 CFLAGS += -I$(TOP)/swlibs/fxmisc

@@ -1,0 +1,7 @@
+*.o
+*.exe
+*.a
+*.dxe
+glide3x/output/
+glide3x/swlibs
+glide3x/sst1/glide3/tests/dosbox.conf

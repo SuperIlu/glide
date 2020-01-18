@@ -53,9 +53,9 @@ TEXUS_EXEDIR = $(FX_GLIDE_SW)/bin
 #	tools
 ###############################################################################
 
-CC = gcc
+CC = i586-pc-msdosdjgpp-gcc
 AS = nasm
-AR = ar
+AR = i586-pc-msdosdjgpp-ar
 DXE3GEN = dxe3gen
 
 #for cross-builds
