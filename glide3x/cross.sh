@@ -174,6 +174,7 @@ echo ">> creating all dxe.c"
 
 ##
 # create testcase and compile it
+TEST=test20
 echo ">> compiling testcase"
 mkdir -p "${OUTDIR}/test"
 (
@@ -181,8 +182,9 @@ mkdir -p "${OUTDIR}/test"
 
 	# get input files
 	cp  ../dxe.c \
-		../../sst1/glide3/tests/test00.c \
+		"../../sst1/glide3/tests/${TEST}.c" \
 		../../sst1/glide3/tests/tlib.c \
+		../../sst1/glide3/tests/*.3df \
 		../../sst1/glide3/tests/tlib.h \
 		../../sst1/glide3/tests/tldata.inc \
 		.
@@ -191,8 +193,8 @@ mkdir -p "${OUTDIR}/test"
 	i586-pc-msdosdjgpp-gcc -O2 -ffast-math -I../v1/include -D__DOS__ -DSST1 -D__DOS32__ -c -o dxe.o    dxe.c
 	i586-pc-msdosdjgpp-gcc -O2 -ffast-math -I../v1/include -D__DOS__ -DSST1 -D__DOS32__ -c -o tlib.o   tlib.c
 	i586-pc-msdosdjgpp-gcc -O2 -ffast-math -I../v1/include -D__DOS__ -DSST1 -D__DOS32__ -c -o tlib.o   tlib.c
-	i586-pc-msdosdjgpp-gcc -O2 -ffast-math -I../v1/include -D__DOS__ -DSST1 -D__DOS32__ -c -o test00.o test00.c
-	i586-pc-msdosdjgpp-gcc -o test00.exe -s -L../v1/lib test00.o tlib.o dxe.o -lglide3i
+	i586-pc-msdosdjgpp-gcc -O2 -ffast-math -I../v1/include -D__DOS__ -DSST1 -D__DOS32__ -c -o "${TEST}.o" "${TEST}.c"
+	i586-pc-msdosdjgpp-gcc -o "${TEST}.exe" -s -L../v1/lib "${TEST}.o" tlib.o dxe.o -lglide3i
 
 	# get v1 DXE
 	cp ../v1/lib/glide3x.dxe .

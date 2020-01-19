@@ -23,7 +23,7 @@ What has been done/tested so far:
 * Compilation of libglide3i.a and libglide3x.a as well as glide3x.dxe for all flavours of hardware
 * Voodoo1/SST1 test cases run on [DOSBox-x](https://github.com/joncampbell123/dosbox-x) and on a real Voodoo 1. These test cases were statically linked (no DXE yet).
 * Voodoo2 test cases run on real hardware.
+* dedicated DXE interoperability testcase linked against V1 runs on V1 and V2.
 
 What needs to be done/tested:
 * All other hardware flavours need to be tested (I'm able to test V1/V2/V3/Rush/Banshe, I won't be able to test V4 and V5)
-* DXE interoperability, e.g. compiling against V1 link library and using V2 DXE
