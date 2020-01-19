@@ -11,15 +11,16 @@ test -d swlibs || ln -s ../swlibs swlibs
 # clean specific hardware version
 function fxClean {
 	HW="$1"
-	make -f Makefile.DJ "FX_GLIDE_HW=${HW}" clean
+	make -f Makefile.DJ "FX_GLIDE_HW=${HW}" clean >>"${OUTDIR}/build.log" 2>&1
 }
 
 ##
 # compile specific hardware version
 function fxCompile {
 	HW="$1"
+	echo ">> building $HW"
 	fxClean "${HW}"
-	make -f Makefile.DJ "FX_GLIDE_HW=${HW}" USE_X86=0 CC=i586-pc-msdosdjgpp-gcc AR=i586-pc-msdosdjgpp-ar
+	make -f Makefile.DJ "FX_GLIDE_HW=${HW}" USE_X86=0 CC=i586-pc-msdosdjgpp-gcc AR=i586-pc-msdosdjgpp-ar >>"${OUTDIR}/build.log" 2>&1
 }
 
 ##
@@ -33,12 +34,14 @@ function fxTests {
 
 	cd "${HW}/glide3/tests/"
 
-	make -f Makefile.DJ clean	
-	make -f Makefile.DJ sbench.exe
+	{
+		make -f Makefile.DJ clean
+		make -f Makefile.DJ sbench.exe
 
-	for i in $(seq -f "%02.0f" 00 39); do
-		make -f Makefile.DJ "test${i}.exe"
-	done
+		for i in $(seq -f "%02.0f" 00 39); do
+			make -f Makefile.DJ "test${i}.exe"
+		done
+	} >>"${OUTDIR}/build.log" 2>&1
 
 	cd ../../..
 }
@@ -83,6 +86,7 @@ function fxCopy {
 
 ##
 # define output
+echo ">> cleaning old output"
 OUTDIR=$(pwd)/output
 rm -rf "${OUTDIR}"
 mkdir "${OUTDIR}"
@@ -91,7 +95,7 @@ mkdir "${OUTDIR}"
 # Voodoo rush (is built first because i want the sst1 to remain in the build directory for DOSBox-x tests!)
 fxCompile sst96
 fxTests sst96
-fxCopy sst96 rush \
+fxCopy sst96 vr \
 	swlibs/fxmisc/3dfx.h \
 	sst1/glide3/src/glide.h \
 	sst1/glide3/src/glidesys.h \
@@ -148,3 +152,48 @@ fxCopy h5 v4 \
  	h5/glide3/src/glideutl.h \
  	h5/incsrc/sst1vid.h
 fxClean h5
+
+##
+# create individual and combined dxe.c for all DXE flavors
+echo ">> creating all dxe.c"
+(
+	cd "${OUTDIR}"
+	dxe3res -o v1/dxe.c v1/lib/glide3x.dxe
+	dxe3res -o v2/dxe.c v2/lib/glide3x.dxe
+	dxe3res -o v3/dxe.c v4/lib/glide3x.dxe 
+	dxe3res -o v4/dxe.c v4/lib/glide3x.dxe
+	dxe3res -o vr/dxe.c vr/lib/glide3x.dxe
+	{
+		echo "#include <sys/dxe.h>";
+		cat ./*/dxe.c | grep "extern_asm" | sort | uniq;
+		echo "DXE_EXPORT_TABLE_AUTO (___dxe_eta___glide3x)";
+		cat ./*/dxe.c | grep "DXE_EXPORT_ASM" | sort | uniq;
+		echo "DXE_EXPORT_END"
+	} >dxe.c
+)
+
+##
+# create testcase and compile it
+echo ">> compiling testcase"
+mkdir -p "${OUTDIR}/test"
+(
+	cd "${OUTDIR}/test"
+
+	# get input files
+	cp  ../dxe.c \
+		../../sst1/glide3/tests/test00.c \
+		../../sst1/glide3/tests/tlib.c \
+		../../sst1/glide3/tests/tlib.h \
+		../../sst1/glide3/tests/tldata.inc \
+		.
+
+	# compile
+	i586-pc-msdosdjgpp-gcc -O2 -ffast-math -I../v1/include -D__DOS__ -DSST1 -D__DOS32__ -c -o dxe.o    dxe.c
+	i586-pc-msdosdjgpp-gcc -O2 -ffast-math -I../v1/include -D__DOS__ -DSST1 -D__DOS32__ -c -o tlib.o   tlib.c
+	i586-pc-msdosdjgpp-gcc -O2 -ffast-math -I../v1/include -D__DOS__ -DSST1 -D__DOS32__ -c -o tlib.o   tlib.c
+	i586-pc-msdosdjgpp-gcc -O2 -ffast-math -I../v1/include -D__DOS__ -DSST1 -D__DOS32__ -c -o test00.o test00.c
+	i586-pc-msdosdjgpp-gcc -o test00.exe -s -L../v1/lib test00.o tlib.o dxe.o -lglide3i
+
+	# get v1 DXE
+	cp ../v1/lib/glide3x.dxe .
+)

@@ -16,11 +16,14 @@ Binaries generated with GCC 7.2.0 only got me a black screen on real hardware.
 
 ``cross.ch`` will create an ``output/`` directory in the glide3x directory with includes, link libraries and test cases for all types of hardware.
 
+In order to be able to create an EXE which will run with all you need to compile and link against Voodoo 1 ``libglide3i.a``.
+For this to work I modified the DXE generation in the sst1 ``Makefile.DJ``. All symbols that do not exist in V2/V3/V4 DXEs are no longer exported by the V1 ``libglide3i.a``.
+
 What has been done/tested so far:
 * Compilation of libglide3i.a and libglide3x.a as well as glide3x.dxe for all flavours of hardware
 * Voodoo1/SST1 test cases run on [DOSBox-x](https://github.com/joncampbell123/dosbox-x) and on a real Voodoo 1. These test cases were statically linked (no DXE yet).
 * Voodoo2 test cases run on real hardware.
 
 What needs to be done/tested:
-* All other hardware flavours (I'm able to test V1/V2/V3/Rush/Banshe, I won't be able to test V4 and V5)
+* All other hardware flavours need to be tested (I'm able to test V1/V2/V3/Rush/Banshe, I won't be able to test V4 and V5)
 * DXE interoperability, e.g. compiling against V1 link library and using V2 DXE
