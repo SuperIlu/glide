@@ -81,8 +81,9 @@ main (int argc, char **argv)
         printf("\n");
 
         printf("/* The # of 2-byte entries in the hw fog table */\n");
-        printf("#define kInternalFogTableEntryCount 0x%X\n",
-               (unsigned int)sizeof(dummyRegs.fogTable) >> 1);
+        // printf("#define kInternalFogTableEntryCount 0x%X\n",
+        //        (unsigned int)sizeof(dummyRegs.fogTable) >> 1);
+        printf("#define kInternalFogTableEntryCount 0x%X\n", 64);
 
         printf("\n");
         printf("#endif /* __FX_INLINE_H__ */\n");

@@ -78,8 +78,9 @@ main (int argc, char **argv)
                (unsigned long)offsetof(struct GrGC_s, triSetupProc));
 
         printf("/* The # of 2-byte entries in the hw fog table */\n");
-        printf("#define kInternalFogTableEntryCount 0x%X\n",
-               (unsigned int)sizeof(dummyRegs.fogTable) >> 1);
+        // printf("#define kInternalFogTableEntryCount 0x%X\n",
+        //        (unsigned int)sizeof(dummyRegs.fogTable) >> 1);
+        printf("#define kInternalFogTableEntryCount 0x%X\n", 64);
 
         printf("#define kTLSOffset 0x%lXUL\n",
                (unsigned long)offsetof(struct _GlideRoot_s, tlsOffset));
