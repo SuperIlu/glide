@@ -310,13 +310,14 @@ GR_ENTRY(grLfbLock, FxBool,( GrLock_t type, GrBuffer_t buffer,  GrLfbWriteMode_t
             fbzMode |= (origin)?SST_YORIGIN:0;
           }
 
+          grFinish();
           GR_SET( hw->lfbMode, lfbMode );
           gc->state.fbi_config.lfbMode = lfbMode;
 
           GR_SET( hw->fbzMode, fbzMode );
           P6FENCE;              /* This is required to flush the write
                                    buffers before the actual LFB writes */
-
+          grFinish();
           /* GMT: very low-risk race condition is probable here
              if a direct LFB read is done aftewards, the lfbMode register might
              not have settled in yet, and the pixel may be read in the wrong
