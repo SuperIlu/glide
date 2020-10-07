@@ -498,17 +498,17 @@ pciOpen( void )
 
   }
   
-  if ( !busDetected )  { 
-    /* Try Configuration Mechanism 2 (only 16 devices) */
-    /* Since Configuration Mech#2 is obsolete this does not
-       support multiple busses */
+  // if ( !busDetected )  { 
+  //   /* Try Configuration Mechanism 2 (only 16 devices) */
+  //   /* Since Configuration Mech#2 is obsolete this does not
+  //      support multiple busses */
 
-    assert(0); //This stuff looks scary and probably shouldn't be used
+  //   assert(0); //This stuff looks scary and probably shouldn't be used
 
-    for ( deviceNumber = 0; deviceNumber < 16; deviceNumber++ ) {
-      sampleVendorID(deviceNumber,2);
-    }
-  }
+  //   for ( deviceNumber = 0; deviceNumber < 16; deviceNumber++ ) {
+  //     sampleVendorID(deviceNumber,2);
+  //   }
+  // }
   
   if ( busDetected ) {
     pciLibraryInitialized = FXTRUE;
